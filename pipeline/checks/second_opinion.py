@@ -35,10 +35,88 @@ Gợi ý
 - `iou_xywh` có sẵn. Dòng nhãn hỏng không được làm script chết (dùng `ds.valid_boxes` và `parse_yolo_line` trong try).
 - Kết quả phụ thuộc mạnh vào ngưỡng: calibrate chúng ở Bước 3 thay vì đoán.
 """
-from ..common import WARN, Issue, iou_xywh, parse_yolo_line  # noqa: F401
-from ..model_cache import get_preds  # noqa: F401
+from ..common import WARN, Issue, iou_xywh, parse_yolo_line
+from ..model_cache import get_preds
+
+CHECK = "second_opinion"
+
+
+def _label_boxes(ds, stem, n_cls):
+    """[(số dòng gốc, (id, cx, cy, w, h))] của các dòng hợp lệ — đọc file 1 lần, giữ số dòng (valid_boxes thì không)."""
+    out = []
+    for ln_no, text in ds.read_label_lines(stem) or []:
+        try:
+            b = parse_yolo_line(text)
+        except ValueError:
+            continue                     # dòng hỏng: label_format đã báo
+        if 0 <= b[0] < n_cls:
+            out.append((ln_no, b))
+    return out
+
+
+def _judge(r, labels, c):
+    """Phân loại MỘT dự đoán r theo thứ tự ưu tiên của docstring. Trả về (mã, extra) hoặc None."""
+    cls, conf, box = int(r[0]), float(r[1]), r[2:6]
+    best_same = best_other = None       # None = không có ứng viên loại đó
+    for _, b in labels:
+        iou = iou_xywh(box, b[1:])
+        if iou < c["iou_missing"]:
+            continue                     # không phải ứng viên
+        if b[0] == cls:
+            best_same = iou if best_same is None else max(best_same, iou)
+        else:
+            best_other = iou if best_other is None else max(best_other, iou)
+    extra = {"conf": round(conf, 4), "class": cls}
+    if best_same is None and best_other is None:                # (1) cands rỗng
+        return "POSSIBLE_MISSING", extra
+    if best_same is not None:                                   # (2) có cands cùng lớp
+        if best_same < c["iou_loose"]:
+            return "POSSIBLE_LOOSE_BOX", {**extra, "iou": round(best_same, 4)}
+        return None                                             # nhãn đúng lớp đã phủ vật -> im lặng, kể cả có nhãn khác lớp chồng
+    if best_other >= c["iou_match"]:                            # (3) chỉ có cands khác lớp
+        return "POSSIBLE_WRONG_CLASS", {**extra, "iou": round(best_other, 4)}
+    return None                                                 # khác lớp, IoU mơ hồ -> không cờ
+
+
+MSG = {
+    "POSSIBLE_MISSING": "model thấy vật lớp {class} (conf {conf}) mà nhãn không có box",
+    "POSSIBLE_LOOSE_BOX": "cùng vật, cùng lớp {class} nhưng box lệch/lỏng (IoU {iou})",
+    "POSSIBLE_WRONG_CLASS": "model nói lớp {class} (conf {conf}) nhưng nhãn trùng chỗ lại khác lớp (IoU {iou})",
+}
 
 
 def run(ds, cfg, preds=None):
-    # TODO
-    raise NotImplementedError("check second_opinion chưa làm")
+    c = cfg["second_opinion"]
+    if preds is None:
+        preds = get_preds(ds, cfg, "checker")
+    n_cls = len(ds.classes)
+    issues = []
+    for img in ds.image_files():
+        stem = img.stem
+        if stem not in preds or not ds.label_path(stem).exists():
+            continue
+        size = ds.image_size(stem)
+        if not size:
+            continue                     # ảnh không mở được: images check đã báo
+        W, H = size
+        rows = preds[stem] or []
+        labels = _label_boxes(ds, stem, n_cls)
+
+        # Lượt 1: dự đoán -> nhãn (chỉ dự đoán tin được và đủ lớn); mỗi dự đoán tối đa 1 issue
+        for r in rows:
+            if r[1] < c["conf"] or r[4] * W * r[5] * H < c["min_area_px"]:
+                continue
+            got = _judge(r, labels, c)
+            if got:
+                code, extra = got
+                issues.append(Issue(CHECK, WARN, code, stem, MSG[code].format(**extra), None, extra))
+
+        # Lượt 2: nhãn -> dự đoán (conf >= fp_conf, KHÔNG lọc diện tích)
+        fp_boxes = [r[2:6] for r in rows if r[1] >= c["fp_conf"]]
+        for ln_no, b in labels:
+            best = max((iou_xywh(b[1:], p) for p in fp_boxes), default=0.0)
+            if best < c["iou_missing"]:
+                issues.append(Issue(CHECK, WARN, "POSSIBLE_FALSE_POS", stem,
+                                    f"box nhãn lớp {b[0]} không khớp vật nào model thấy (IoU tốt nhất {best:.2f})",
+                                    ln_no, {"iou": round(best, 4), "class": b[0]}))
+    return issues
