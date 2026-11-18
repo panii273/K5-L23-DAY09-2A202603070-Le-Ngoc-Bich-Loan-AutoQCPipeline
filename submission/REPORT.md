@@ -38,12 +38,12 @@ Máy tự sửa **35 thay đổi** (`03_fixes.csv`: 20 `drop_line`, 8 `clip_box`
 Với ngân sách 80 ảnh: trong v2 có **123 cờ ngữ nghĩa (`POSSIBLE_*`) trên 103 ảnh**, người duyệt xem được **94/123 cờ (76%) trên 74/103 ảnh**. Ảnh hạng 80 có 3,343 điểm và ảnh hạng 81 có 3,333 điểm. 45 ảnh không được xem chủ yếu là `LOOSE_BOX` (16) và `FALSE_POS` (11), tức những cờ có trọng số thấp hơn.
 
 ## 3. Calibration (2 ngưỡng)
-Số đo trên 39 ảnh calib (`submission/calibration/calibration_report.md`; bản chạy với cấu hình khởi đầu được giữ để đối chiếu).
+Số đo trên 39 ảnh calib (`submission/calibration/calibration_report.md`, sinh với cấu hình đã chọn; cột "trước" lấy từ các dòng `2` và `0.25` của chính bảng sweep).
 
 | Tham số | Khởi đầu | Đã chọn | Precision / Recall (trước → sau) | Lý do (đánh đổi) |
 |---|---|---|---|---|
 | `duplicates.phash_dist` | 2 | **10** | NEAR: 1.00/0.50 (3/6) → 1.00/0.67 (4/6); EXACT giữ 1.00/1.00 | Cờ sai = **xoá nhầm ảnh tốt**, nên ưu tiên precision. Trên calib, các giá trị 4–14 cho kết quả như nhau. Trên raw, số ảnh bị loại là 14 (dist 2), 16 (dist 6), **17 (dist 10–14)**, **26 (dist 16)**, 134 (dist 20). Ba cặp thêm vào khi tăng lên 10 đều là trùng thật (đổi màu, thêm viền, cắt). Chọn 10 để còn cách xa vùng bắt đầu gộp nhầm. |
-| `second_opinion.conf` | 0.25 | **0.6** | MISSING 0.50/1.00 → 0.57/1.00; WRONG_CLASS 0.56/0.83 → 0.62/0.83; LOOSE_BOX 0.29/0.40 → 0.20/0.20; FALSE_POS 0.31/1.00 không đổi (dùng `fp_conf`) | Đây là cảnh báo cho người, nên giá của FN (lỗi lọt vào dataset) cao hơn giá của FP (người mở ảnh uổng công). 0.6 là `conf` cao nhất mà recall MISSING vẫn đạt 8/8. Lên 0.7 thì còn 7/8, lên 0.8 còn 6/8. Lên 0.8 thì gate sẽ Release, nhưng là **Release giả** vì checker bị làm mù đi 25%. Đổi lại, số cờ MISSING ở v1 giảm từ 151 (conf 0.25) xuống 53, và hàng đợi giảm từ 143 xuống 125 ảnh. Cái giá phải trả: recall LOOSE_BOX giảm từ 2/5 xuống 1/5. |
+| `second_opinion.conf` | 0.25 | **0.6** | MISSING 0.50/1.00 → 0.57/1.00; WRONG_CLASS 0.56/0.83 → 0.62/0.83; LOOSE_BOX 0.29/0.40 → 0.20/0.20; FALSE_POS 0.31/1.00 không đổi (dùng `fp_conf`) | Đây là cảnh báo cho người, nên giá của FN (lỗi lọt vào dataset) cao hơn giá của FP (người mở ảnh uổng công). 0.6 là `conf` cao nhất mà recall MISSING vẫn đạt 8/8. Lên 0.7 thì còn 7/8, lên 0.8 còn 6/8. Lên 0.8 thì gate sẽ Release, nhưng là **Release giả** vì checker bị làm mù đi 25%. Đổi lại, số cờ MISSING sau tự sửa (v2) giảm từ 151 (conf 0.25, lần chạy thử) xuống 53, và hàng đợi giảm từ 143 xuống 125 ảnh. Cái giá phải trả: recall LOOSE_BOX giảm từ 2/5 xuống 1/5. |
 
 **Calibration có thể đánh lừa ở đâu.** Nếu chỉ nhìn bảng sweep thì `phash_dist = 16` là tốt nhất: precision NEAR 1.00, recall 0.83 (5/6), cao hơn mọi giá trị khác. Nhưng trên raw, dist 16 loại thêm 9 ảnh. Mình đã mở xem 6 cặp trong số đó: **5 cặp là ảnh khác hẳn nhau** (img_0011 quần vợt và img_0008 trượt tuyết; img_0013 phòng làm việc và test_087 bóng chày; img_0017, img_0021, img_0177…); chỉ img_0084/img_0074 là trùng thật. Calib có 39 ảnh và chỉ 6 ảnh gần trùng, nên không đủ cặp "khác nhau nhưng phash gần" để lộ ra FP. Precision 1.00 ở đây là do mẫu quá nhỏ, không phải vì ngưỡng an toàn. Mỗi ô chỉ có 5–8 lỗi chèn, nên một lỗi đổi recall 12–20 điểm phần trăm.
 
@@ -98,16 +98,18 @@ Bảng do `scripts/summarize_results.py` sinh (`submission/results/comparison.md
 **(a) Quyết định cuối: Hold.**
 - Không có lỗi bắt buộc nào còn lại, nhưng 38/202 ảnh (18,81%) có cảnh báo chưa được duyệt.
 - **Điều kiện để thành Release:** người duyệt thêm ít nhất **18 ảnh** trong 38 ảnh này (hàng đợi `05_review_queue.csv` từ hạng 81 trở đi), để còn tối đa 20/202 ảnh (9,9% < 10%), rồi chạy `--resume-after-review`.
-- Mình không hạ recall của checker (conf 0.8) hay đổi ngân sách để ép ra Release.
+- Không hạ recall của checker (conf 0.8) hay đổi ngân sách để ép ra Release.
 - Kết quả **Rework** chỉ xảy ra khi không có ai gán nhãn cho 6 ảnh thiếu nhãn (§4a).
 
-**(b) Có dùng AI (Claude) để viết 4 module và chạy kiểm tra:**
+**(b) Có dùng AI (Claude) để viết 4 module, chạy kiểm tra và soạn báo cáo này**
 - **Prompt chính:** mô tả đủ 4 ý (định dạng YOLO `class cx cy w h` kèm dòng mẫu; quy tắc từng module theo docstring; đầu ra `Issue`/log/dict; giới hạn: chỉ sửa 4 module, không ghi `data/raw`, ngưỡng lấy từ `cfg`, không đọc `review_reference`/`test/labels`/`MANIFEST`), yêu cầu đọc docstring và test trước, làm theo thứ tự label_format → gate → autofix → second_opinion.
 - **Cách kiểm:**
   - Đọc code xem có xoá hay ghi đè file ngoài dataset làm việc không, có `except: pass` không, có viết cứng ngưỡng không.
   - Chạy test từng module, rồi `pytest -q`: **79 passed**.
   - Thử thêm trên bản sao 3 ca: một dòng dính 2 lỗi (tràn + trùng → chỉ 1 `drop_line`); file có dòng trống xen giữa các dòng lỗi (số dòng gốc 3, 6, 9 đúng); một ảnh có 6 dự đoán chồng nhau (ra đúng WRONG_CLASS, MISSING, LOOSE_BOX, FALSE_POS@6).
   - `git status data/` không có thay đổi, và chạy pipeline 2 lần cho báo cáo giống nhau.
+  - Báo cáo: mình đọc lại từng mục và đối chiếu các con số với file nguồn trong `submission/reports/`, `submission/calibration/`, `submission/results/`; tự mở `viz_labels.py` cho img_0001, img_0014, img_0020 để xác nhận 3 lỗi ở §4.
 - **Một lần AI sai:**
   - Bản đầu của `gate` so ngưỡng bằng `warn_ratio` **đã làm tròn 4 chữ số**. Test của đề vẫn xanh, nhưng ca biên tự thử 1000 ảnh cảnh báo / 10001 ảnh (9,999%) bị làm tròn thành 0.1 và ra **Hold** sai. Đã sửa thành so bằng tỷ lệ chưa làm tròn, chỉ làm tròn khi in ra.
-  - Ngoài ra, khi đọc lại `second_opinion`, mình đổi điều kiện `best_same > 0` thành "có ứng viên cùng lớp hay không", vì nếu `iou_missing = 0` thì một ứng viên có IoU = 0 sẽ bị bỏ sót. Lỗi này tìm thấy khi đọc code, không phải do test làm lộ ra.
+  - Ngoài ra, khi đọc lại `second_opinion`, đổi điều kiện `best_same > 0` thành "có ứng viên cùng lớp hay không", vì nếu `iou_missing = 0` thì một ứng viên có IoU = 0 sẽ bị bỏ sót. Lỗi này tìm thấy khi đọc code, không phải do test làm lộ ra.
+  - Ở bản báo cáo đầu (commit `02671c8`), AI ghi sai 2 chỗ ở §3: "số cờ MISSING ở **v1** giảm từ 151" (151 thực ra là số ở **v2** của lần chạy thử với conf 0.25), và "bản chạy với cấu hình khởi đầu được giữ để đối chiếu" (bản đó chỉ nằm trong `work/`, không có trong repo). Đã sửa ở bản này.
