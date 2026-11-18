@@ -1,0 +1,89 @@
+# Danh sách lỗi — SAU người duyệt (v3)
+ảnh đã quét: 202
+
+label_format -> 10 dòng
+missing_labels -> 4 dòng
+second_opinion -> 57 dòng
+
+[WARN ] BOX_HUGE             img_0018.txt:1  box chiếm 97.05% ảnh
+[WARN ] BOX_HUGE             img_0128.txt:1  box chiếm 98.84% ảnh
+[WARN ] BOX_HUGE             img_0196.txt:1  box chiếm 98.42% ảnh
+[WARN ] BOX_TINY             img_0026.txt:6  cạnh ngắn 11.4px < 12px
+[WARN ] BOX_TINY             img_0051.txt:5  cạnh ngắn 8.9px < 12px
+[WARN ] BOX_TINY             img_0069.txt:2  cạnh ngắn 11.2px < 12px
+[WARN ] BOX_TINY             img_0161.txt:2  cạnh ngắn 10.3px < 12px
+[WARN ] BOX_TINY             img_0161.txt:3  cạnh ngắn 11.4px < 12px
+[WARN ] BOX_TINY             img_0161.txt:4  cạnh ngắn 11.9px < 12px
+[WARN ] BOX_TINY             img_0183.txt:11  cạnh ngắn 11.8px < 12px
+[WARN ] EMPTY_LABEL          img_0013  file nhãn rỗng: ảnh nền hay thiếu nhãn?
+[WARN ] EMPTY_LABEL          img_0097  file nhãn rỗng: ảnh nền hay thiếu nhãn?
+[WARN ] EMPTY_LABEL          img_0129  file nhãn rỗng: ảnh nền hay thiếu nhãn?
+[WARN ] EMPTY_LABEL          img_0192  file nhãn rỗng: ảnh nền hay thiếu nhãn?
+[WARN ] POSSIBLE_FALSE_POS   img_0014.txt:2  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.15)
+[WARN ] POSSIBLE_FALSE_POS   img_0022.txt:2  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0035.txt:2  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0068.txt:8  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.20)
+[WARN ] POSSIBLE_FALSE_POS   img_0069.txt:2  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0075.txt:6  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.11)
+[WARN ] POSSIBLE_FALSE_POS   img_0091.txt:7  box nhãn lớp 2 không khớp vật nào model thấy (IoU tốt nhất 0.26)
+[WARN ] POSSIBLE_FALSE_POS   img_0093.txt:3  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0095.txt:6  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0111.txt:2  box nhãn lớp 3 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0124.txt:8  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.04)
+[WARN ] POSSIBLE_FALSE_POS   img_0131.txt:11  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0134.txt:5  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.04)
+[WARN ] POSSIBLE_FALSE_POS   img_0149.txt:3  box nhãn lớp 0 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0150.txt:3  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.23)
+[WARN ] POSSIBLE_FALSE_POS   img_0177.txt:2  box nhãn lớp 3 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0180.txt:5  box nhãn lớp 3 không khớp vật nào model thấy (IoU tốt nhất 0.00)
+[WARN ] POSSIBLE_FALSE_POS   img_0189.txt:4  box nhãn lớp 0 không khớp vật nào model thấy (IoU tốt nhất 0.01)
+[WARN ] POSSIBLE_FALSE_POS   img_0191.txt:1  box nhãn lớp 0 không khớp vật nào model thấy (IoU tốt nhất 0.26)
+[WARN ] POSSIBLE_FALSE_POS   img_0206.txt:1  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.11)
+[WARN ] POSSIBLE_FALSE_POS   img_0212.txt:4  box nhãn lớp 1 không khớp vật nào model thấy (IoU tốt nhất 0.15)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0015  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.3434)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0018  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.447)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0021  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.486)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0036  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4265)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0038  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.3975)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0045  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.3348)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0046  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.3823)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0054  cùng vật, cùng lớp 0 nhưng box lệch/lỏng (IoU 0.3788)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0058  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4534)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0064  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4501)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0077  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4016)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0082  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4834)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0090  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4628)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0099  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.3023)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0119  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4084)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0125  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.421)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0142  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4278)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0175  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4215)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0200  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.4345)
+[WARN ] POSSIBLE_LOOSE_BOX   img_0212  cùng vật, cùng lớp 1 nhưng box lệch/lỏng (IoU 0.3285)
+[WARN ] POSSIBLE_MISSING     img_0032  model thấy vật lớp 1 (conf 0.608) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0062  model thấy vật lớp 1 (conf 0.6374) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0121  model thấy vật lớp 1 (conf 0.7641) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0126  model thấy vật lớp 1 (conf 0.7174) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0127  model thấy vật lớp 1 (conf 0.6843) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0127  model thấy vật lớp 1 (conf 0.6298) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0135  model thấy vật lớp 1 (conf 0.7297) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0159  model thấy vật lớp 1 (conf 0.6658) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0160  model thấy vật lớp 2 (conf 0.7768) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0183  model thấy vật lớp 1 (conf 0.8104) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0199  model thấy vật lớp 1 (conf 0.7376) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0210  model thấy vật lớp 0 (conf 0.6665) mà nhãn không có box
+[WARN ] POSSIBLE_MISSING     img_0220  model thấy vật lớp 1 (conf 0.625) mà nhãn không có box
+[WARN ] POSSIBLE_WRONG_CLASS img_0078  model nói lớp 0 (conf 0.8287) nhưng nhãn trùng chỗ lại khác lớp (IoU 0.9189)
+[WARN ] POSSIBLE_WRONG_CLASS img_0083  model nói lớp 0 (conf 0.6948) nhưng nhãn trùng chỗ lại khác lớp (IoU 0.9738)
+[WARN ] POSSIBLE_WRONG_CLASS img_0220  model nói lớp 0 (conf 0.7077) nhưng nhãn trùng chỗ lại khác lớp (IoU 0.9106)
+
+## Tổng hợp theo mã
+warn  BOX_HUGE               3
+warn  BOX_TINY               7
+warn  EMPTY_LABEL            4
+warn  POSSIBLE_FALSE_POS     21
+warn  POSSIBLE_LOOSE_BOX     20
+warn  POSSIBLE_MISSING       13
+warn  POSSIBLE_WRONG_CLASS   3
+
+Kết luận: HOLD — không còn lỗi bắt buộc, nhưng 38/202 ảnh (18.81%) còn cảnh báo chưa người duyệt >= ngưỡng 10%
